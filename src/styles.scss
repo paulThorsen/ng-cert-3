@@ -1,1 +1,46 @@
 /* You can add global styles to this file, and also import other style files */
+/* Add application styles & imports to this file! */
+
+.card-wrapper--global {
+    width: 90%;
+    max-width: 120rem;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 4rem;
+    padding: 2rem 2.4rem;
+    background-color: white;
+    border: solid 0.1rem #ddd;
+    border-radius: 0.4rem;
+    box-shadow: 0 0.2rem 0.4rem #ededed;
+    position: relative;
+}
+
+.card-wrapper--global:not(:first-child) {
+    margin-top: 2rem;
+}
+
+button {
+    border: none;
+    background-color: transparent;
+}
+
+.btn--global {
+    color: white;
+    background-color: rgb(14, 76, 156);
+    border: solid 0.1rem rgb(10, 58, 119);
+    border-radius: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.2rem 0.6rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn--global:hover {
+    color: white;
+    background-color: rgb(10, 58, 119);
+}
+
+strong {
+    display: inline-block !important;
+    padding: none !important;
+}

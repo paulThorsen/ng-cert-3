@@ -1,27 +1,26 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { findEl } from './core/testing/element.spec-helper';
 
 describe('AppComponent', () => {
+    let fixture: ComponentFixture<AppComponent>;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [AppComponent],
         }).compileComponents();
+
+        fixture = TestBed.createComponent(AppComponent);
     });
 
-    it('should create the app', () => {
-        const fixture = TestBed.createComponent(AppComponent);
+    it('creates the app', () => {
         const app = fixture.componentInstance;
         expect(app).toBeTruthy();
     });
 
-    it('should render title', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector('.content span')?.textContent).toContain(
-            'ng-cert-3 app is running!'
-        );
+    it('contains a router outlet', () => {
+        expect(findEl(fixture, 'outlet')).toBeTruthy();
     });
 });

@@ -11,7 +11,9 @@ const UNIT_TYPE = 'imperial';
 // In real life this is a bad idea. Secrets should be secret. YOLO for the API key.
 const API_KEY = '5a4b2d457ecbef9eb2a71e480b947604';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class WeatherService {
     private weatherConditionsByZipCache = new Map<number, WeatherConditions>();
     private dayForecastByZipCache = new Map<number, DayForecast>();

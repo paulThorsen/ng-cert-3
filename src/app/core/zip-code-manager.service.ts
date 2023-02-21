@@ -4,7 +4,9 @@ import { map, switchMap, tap } from 'rxjs/operators';
 
 const ZIP_CODES_LOCAL_STORAGE_KEY = 'weatherZipCodes';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class ZipCodeManagerService {
     private zipCodesCache: number[] = [];
 

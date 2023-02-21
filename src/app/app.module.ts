@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,7 +10,7 @@ import { ForecastComponent } from './forecast/forecast.component';
 
 @NgModule({
     declarations: [AppComponent, DashboardComponent, ForecastComponent],
-    imports: [BrowserModule, AppRoutingModule, FormsModule],
+    imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
     providers: [],
     bootstrap: [AppComponent],
 })
