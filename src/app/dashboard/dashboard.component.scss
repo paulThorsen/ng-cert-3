@@ -1,0 +1,61 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+#zipCodeInput {
+    width: 25rem;
+    padding: 0.4rem;
+}
+
+.warning {
+    color: rgb(161, 16, 16);
+    margin-left: 1rem;
+}
+
+.split {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.close {
+    font-size: 1.6rem;
+    position: absolute;
+    top: 0.6rem;
+    right: 1rem;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.loader {
+    border: 0.2rem solid white;
+    border-radius: 100%;
+    border-top: 0.2rem solid rgb(14, 76, 156);
+    width: 30px;
+    height: 30px;
+    -webkit-animation: spinAnimate 1s ease infinite; /* Safari */
+    animation: spinAnimate 1s ease infinite;
+    box-sizing: border-box;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+@keyframes spinAnimate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

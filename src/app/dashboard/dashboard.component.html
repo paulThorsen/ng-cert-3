@@ -1,0 +1,57 @@
+<div class="card-wrapper--global">
+    <form>
+        <h1>Enter a zipcode:</h1>
+        <input
+            #zipCode="ngModel"
+            type="number"
+            id="zipCodeInput"
+            name="zipCode"
+            placeholder="Zipcode"
+            required
+            [(ngModel)]="zipCodeInput"
+        />
+        <span *ngIf="showZipCodeHint" class="warning">Please enter a 5-digit zip code</span>
+        <span *ngIf="errorText" class="warning">{{ errorText }}</span>
+        <br />
+        <button (click)="addLocation(zipCode.value)" class="btn--global">Add location</button>
+        <span *ngIf="isLoading" class="loader"></span>
+    </form>
+</div>
+<div
+    *ngFor="let weatherCondition of zipCodeWeatherConditions$ | async"
+    class="card-wrapper--global"
+>
+    <div class="split">
+        <div>
+            <h2>{{ weatherCondition.conditions.name }} ({{ weatherCondition.zipCode }})</h2>
+            <h3>Current conditions: {{ weatherCondition.conditions.weather[0].main }}</h3>
+            <h4>
+                Temperatures today: Current {{ weatherCondition.conditions.main.temp }} - Max
+                {{ weatherCondition.conditions.main.temp_max }} - Min
+                {{ weatherCondition.conditions.main.temp_min }}
+            </h4>
+            <a [routerLink]="'forecast/' + weatherCondition.zipCode">View 5-day forecast</a>
+        </div>
+        <img
+            *ngIf="weatherCondition.conditions.weather[0].main === 'Clouds'"
+            class="icon"
+            src="https://www.angulartraining.com/images/weather/clouds.png"
+        />
+        <img
+            *ngIf="weatherCondition.conditions.weather[0].main === 'Clear'"
+            class="icon"
+            src="https://www.angulartraining.com/images/weather/sun.png"
+        />
+        <img
+            *ngIf="weatherCondition.conditions.weather[0].main === 'Rain'"
+            class="icon"
+            src="https://www.angulartraining.com/images/weather/rain.png"
+        />
+        <img
+            *ngIf="weatherCondition.conditions.weather[0].main === 'Snow'"
+            class="icon"
+            src="https://www.angulartraining.com/images/weather/snow.png"
+        />
+    </div>
+    <button class="close" (click)="removeLocation(weatherCondition.zipCode)">&#215;</button>
+</div>

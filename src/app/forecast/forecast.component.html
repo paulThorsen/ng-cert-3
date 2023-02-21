@@ -1,0 +1,34 @@
+<div class="card-wrapper--global">
+    <a [routerLink]="'/'" class="btn--global">Back</a>
+
+    <h1>{{ (weatherConditionsForZip$ | async)?.city?.name }} ({{ zipCode }})</h1>
+    <div class="forecast-container">
+        <div *ngFor="let day of (weatherConditionsForZip$ | async)?.list" class="container-row">
+            <!-- For some reason day.dt comes back too small. Multiply by 1000 to get current day. -->
+            <div>
+                <strong>{{ day.dt * 1000 | date : 'EEEE LLL d' }}:</strong>
+                {{ day.weather[0].main }} - High: {{ day.temp.max }} - Low: {{ day.temp.min }}
+            </div>
+            <img
+                *ngIf="day.weather[0].main === 'Clouds'"
+                class="icon"
+                src="https://www.angulartraining.com/images/weather/clouds.png"
+            />
+            <img
+                *ngIf="day.weather[0].main === 'Clear'"
+                class="icon"
+                src="https://www.angulartraining.com/images/weather/sun.png"
+            />
+            <img
+                *ngIf="day.weather[0].main === 'Rain'"
+                class="icon"
+                src="https://www.angulartraining.com/images/weather/rain.png"
+            />
+            <img
+                *ngIf="day.weather[0].main === 'Snow'"
+                class="icon"
+                src="https://www.angulartraining.com/images/weather/snow.png"
+            />
+        </div>
+    </div>
+</div>
