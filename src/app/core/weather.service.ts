@@ -25,15 +25,7 @@ export class WeatherService {
             return of(this.weatherConditionsByZipCache.get(zipCode));
         }
 
-        const uri =
-            BASE_WEATHER_URL +
-            'weather' +
-            '?zip=' +
-            zipCode +
-            '&units=' +
-            UNIT_TYPE +
-            '&appid=' +
-            API_KEY;
+        const uri = `${BASE_WEATHER_URL}weather?zip=${zipCode}&units=${UNIT_TYPE}&appid=${API_KEY}`;
 
         return this.httpClient.get<WeatherConditions>(uri).pipe(
             tap((wc) => this.weatherConditionsByZipCache.set(zipCode, wc)),
