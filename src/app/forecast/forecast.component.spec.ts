@@ -3,10 +3,10 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { expectText, findEl, findEls } from '../core/testing/element.spec-helper';
-import { MockWeatherService } from '../core/testing/mock-classes';
 import { mockZip } from '../core/testing/mock-data/mock-data';
 import { mockProvo5DayForecast } from '../core/testing/mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
+import { weatherServiceSpy } from '../core/testing/spies';
 import { WeatherService } from '../core/weather.service';
 import { ForecastComponent } from './forecast.component';
 
@@ -18,7 +18,7 @@ describe('ForecastComponent', () => {
             imports: [RouterTestingModule],
             declarations: [ForecastComponent],
             providers: [
-                { provide: WeatherService, useClass: MockWeatherService },
+                { provide: WeatherService, useValue: weatherServiceSpy },
                 {
                     provide: ActivatedRoute,
                     useValue: {
