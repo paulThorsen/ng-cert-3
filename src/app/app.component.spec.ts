@@ -13,6 +13,7 @@ describe('AppComponent', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(AppComponent);
+        fixture.detectChanges();
     });
 
     it('creates the app', () => {
