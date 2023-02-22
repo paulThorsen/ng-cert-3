@@ -1,28 +1,44 @@
+import { Coordinates, Weather } from './day-forecast';
+
 export interface WeatherConditions {
-    coord: { lon: number; lat: number };
-    weather: { id: number; main: string; description: string; icon: string }[];
+    coord: Coordinates;
+    weather: Weather[];
     base: string;
-    main: {
-        temp: number;
-        feels_like: number;
-        temp_min: number;
-        temp_max: number;
-        pressure: number;
-        humidity: number;
-    };
+    main: Conditions;
     visibility: number;
-    wind: { speed: number; deg: number; gust: number };
-    clouds: { all: number };
+    wind: Wind;
+    clouds: Clouds;
     dt: number;
-    sys: {
-        type: number;
-        id: number;
-        country: string;
-        sunrise: number;
-        sunset: number;
-    };
+    sys: SystemInfo;
     timezone: number;
     id: number;
     name: string;
     cod: number;
+}
+
+export interface SystemInfo {
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
+}
+
+export interface Clouds {
+    all: number;
+}
+
+export interface Wind {
+    speed: number;
+    deg: number;
+    gust: number;
+}
+
+export interface Conditions {
+    temp: number;
+    feels_like: number;
+    temp_min: number;
+    temp_max: number;
+    pressure: number;
+    humidity: number;
 }
