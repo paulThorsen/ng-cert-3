@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { config } from './config';
 
 @Injectable({
@@ -12,7 +12,8 @@ export class ZipCodeService {
         this.getZipCodes();
     }
 
-    public getZipCodesSubjectAsObservable = () => this.zipCodesSubject.asObservable();
+    public getZipCodesSubjectAsObservable = (): Observable<number[]> =>
+        this.zipCodesSubject.asObservable();
 
     /**
      * Adds a zip code to the current array of codes, then calls `setZipCodes()`
