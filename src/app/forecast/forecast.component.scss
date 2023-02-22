@@ -13,17 +13,10 @@
     align-items: center;
 
     & img {
-        max-width: 230px;
         max-height: 45px;
-        width: auto;
-        height: auto;
     }
-}
 
-.container-row:not(:first-child) {
-    border-top: solid 0.1rem #ccc;
-}
-
-h1 {
-    margin-top: 2rem;
+    &:not(:first-child) {
+        border-top: solid 0.1rem #ccc;
+    }
 }
