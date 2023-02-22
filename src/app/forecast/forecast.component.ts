@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 import { map, share, switchMap } from 'rxjs/operators';
 import { config } from '../core/config';
 import { DayForecast } from '../core/models/day-forecast';
@@ -19,8 +19,7 @@ export class ForecastComponent {
     );
 
     weatherConditionsForZip$: Observable<DayForecast | null> = this.zipCode$.pipe(
-        switchMap((zipCode) =>
-            this.weather.getDayForecaseByZip(zipCode, config.FORECASTED_DAYS).pipe(share())
-        )
+        switchMap((zipCode) => this.weather.getDayForecaseByZip(zipCode, config.FORECASTED_DAYS)),
+        share()
     );
 }
