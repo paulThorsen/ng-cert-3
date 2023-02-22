@@ -24,7 +24,7 @@ export class DashboardComponent {
                     : forkJoin(
                           zipCodes.map((zip) =>
                               this.weather.getWeatherConditionsByZip(zip).pipe(
-                                  // Transform each observable to typeof WeatherConditionFromZip
+                                  // Convert WeatherConditions to WeatherConditionsFromZip
                                   map((weather): WeatherConditionsFromZip => {
                                       return {
                                           zipCode: zip,
