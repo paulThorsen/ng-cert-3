@@ -9,7 +9,7 @@ const routes: Routes = [
         component: DashboardComponent,
     },
     {
-        path: 'forecast/:zipCode',
+        path: 'forecast/:zip',
         component: ForecastComponent,
     },
 ];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { share } from 'rxjs/operators';
+import { map, share, switchMap } from 'rxjs/operators';
 import { config } from '../core/config';
 import { DayForecast } from '../core/models/day-forecast';
 import { WeatherService } from '../core/weather.service';
@@ -11,20 +11,16 @@ import { WeatherService } from '../core/weather.service';
     templateUrl: './forecast.component.html',
     styleUrls: ['./forecast.component.scss'],
 })
-export class ForecastComponent implements OnInit {
-    zipCode: number | null = null;
-    weatherConditionsForZip$: Observable<DayForecast | null> = of(null);
-
+export class ForecastComponent {
     constructor(private route: ActivatedRoute, private weather: WeatherService) {}
 
-    ngOnInit() {
-        this.route.paramMap.subscribe((params: ParamMap) => {
-            const zipCode = parseInt(params.get('zipCode') as string);
-            this.zipCode = zipCode;
+    zipCode$: Observable<number> = this.route.paramMap.pipe(
+        map((paramMap) => parseInt(paramMap.get('zip') || ''))
+    );
 
-            this.weatherConditionsForZip$ = this.weather
-                .getDayForecaseByZip(zipCode, config.FORECASTED_DAYS)
-                .pipe(share());
-        });
-    }
+    weatherConditionsForZip$: Observable<DayForecast | null> = this.zipCode$.pipe(
+        switchMap((zipCode) =>
+            this.weather.getDayForecaseByZip(zipCode, config.FORECASTED_DAYS).pipe(share())
+        )
+    );
 }
