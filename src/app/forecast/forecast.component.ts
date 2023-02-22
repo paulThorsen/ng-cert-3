@@ -25,7 +25,6 @@ export class ForecastComponent implements OnInit {
 
             this.weatherConditionsForZip$ = this.weather
                 .getDayForecaseByZip(zipCode, FORECASTED_DAYS)
-                // Broadcast to multiple "| async" pipes at once without multiple calls to services
                 .pipe(share());
         });
     }
