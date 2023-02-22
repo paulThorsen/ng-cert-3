@@ -19,7 +19,7 @@ export class ForecastComponent {
     );
 
     weatherConditionsForZip$: Observable<DayForecast | null> = this.zipCode$.pipe(
-        switchMap((zipCode) => this.weather.getDayForecaseByZip(zipCode, config.FORECASTED_DAYS)),
+        switchMap((zipCode) => this.weather.getDayForecastByZip(zipCode, config.FORECASTED_DAYS)),
         share()
     );
 }

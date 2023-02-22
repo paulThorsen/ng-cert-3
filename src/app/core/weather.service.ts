@@ -15,36 +15,25 @@ export class WeatherService {
 
     constructor(private httpClient: HttpClient) {}
 
-    public getWeatherConditionsByZip = (zipCode: number): Observable<any> => {
-        if (this.weatherConditionsByZipCache.has(zipCode)) {
-            return of(this.weatherConditionsByZipCache.get(zipCode));
+    public getWeatherConditionsByZip = (zip: number): Observable<WeatherConditions> => {
+        if (this.weatherConditionsByZipCache.has(zip)) {
+            return of(this.weatherConditionsByZipCache.get(zip) as WeatherConditions);
         }
 
-        const uri = `${config.BASE_WEATHER_URL}weather?zip=${zipCode}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
-
-        return this.httpClient.get<WeatherConditions>(uri).pipe(
-            tap((wc) => this.weatherConditionsByZipCache.set(zipCode, wc)),
-            catchError((err, caught) => {
-                return of(null);
-            })
-        );
+        const uri = `${config.BASE_WEATHER_URL}weather?zip=${zip}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
+        return this.httpClient
+            .get<WeatherConditions>(uri)
+            .pipe(tap((wc) => this.weatherConditionsByZipCache.set(zip, wc)));
     };
 
-    public getDayForecaseByZip = (
-        zipCode: number,
-        days: number
-    ): Observable<DayForecast | null> => {
-        if (this.dayForecastByZipCache.has(zipCode)) {
-            return of(this.dayForecastByZipCache.get(zipCode) as DayForecast);
+    public getDayForecastByZip = (zip: number, days: number): Observable<DayForecast> => {
+        if (this.dayForecastByZipCache.has(zip)) {
+            return of(this.dayForecastByZipCache.get(zip) as DayForecast);
         }
 
-        const uri = `${config.BASE_WEATHER_URL}forecast/daily?zip=${zipCode}&cnt=${days}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
-
-        return this.httpClient.get<DayForecast>(uri).pipe(
-            tap((df) => this.dayForecastByZipCache.set(zipCode, df)),
-            catchError((err, caught) => {
-                return of(null);
-            })
-        );
+        const uri = `${config.BASE_WEATHER_URL}forecast/daily?zip=${zip}&cnt=${days}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
+        return this.httpClient
+            .get<DayForecast>(uri)
+            .pipe(tap((df) => this.dayForecastByZipCache.set(zip, df)));
     };
 }

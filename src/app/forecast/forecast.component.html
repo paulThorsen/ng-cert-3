@@ -1,6 +1,8 @@
 <div class="card-wrapper--global">
-    <a [routerLink]="'/'" class="btn--global">Back</a>
-    <h1>{{ (weatherConditionsForZip$ | async)?.city?.name }} ({{ zipCode$ | async }})</h1>
+    <a [routerLink]="'/'" class="btn--global" data-testid="back">Back</a>
+    <h1 data-testid="header">
+        {{ (weatherConditionsForZip$ | async)?.city?.name }} ({{ zipCode$ | async }})
+    </h1>
     <div class="forecast-container">
         <div *ngFor="let day of (weatherConditionsForZip$ | async)?.list" class="container-row">
             <!-- For some reason day.dt comes back too small. Multiply by 1000 to get current day. -->
@@ -16,6 +18,7 @@
                     day.weather[0].main === 'Snow'
                 "
                 [src]="'/assets/weather-icons/' + (day.weather[0].main | lowercase) + '.png'"
+                data-testid="icon"
             />
         </div>
     </div>

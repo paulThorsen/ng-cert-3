@@ -1,0 +1,22 @@
+export const mockProvoWeather = {
+    coord: { lon: -111.6447, lat: 40.2347 },
+    weather: [{ id: 701, main: 'Mist', description: 'mist', icon: '50d' }],
+    base: 'stations',
+    main: {
+        temp: 23.7,
+        feels_like: 11.1,
+        temp_min: 20.91,
+        temp_max: 25.25,
+        pressure: 988,
+        humidity: 86,
+    },
+    visibility: 2414,
+    wind: { speed: 27.63, deg: 330, gust: 34.52 },
+    clouds: { all: 100 },
+    dt: 1677089882,
+    sys: { type: 2, id: 2009866, country: 'US', sunrise: 1677075048, sunset: 1677114583 },
+    timezone: -25200,
+    id: 0,
+    name: 'Provo',
+    cod: 200,
+};
