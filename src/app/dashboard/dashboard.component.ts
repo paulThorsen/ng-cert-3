@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, forkJoin, Observable, of, Subject } from 'rxjs';
-import { combineAll, map, mergeAll, mergeMap, share, switchMap, tap } from 'rxjs/operators';
-import { WeatherConditions } from '../core/models/weather-conditions';
+import { combineLatest, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/weather.service';
 import { ZipCodeManagerService } from '../core/zip-code-manager.service';
-
-interface WeatherConditionsFromZip {
-    zipCode: number;
-    conditions: WeatherConditions;
-}
 
 @Component({
     selector: 'app-dashboard',

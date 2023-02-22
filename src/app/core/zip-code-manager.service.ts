@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-
-const ZIP_CODES_LOCAL_STORAGE_KEY = 'weatherZipCodes';
+import { config } from './config';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +24,9 @@ export class ZipCodeManagerService {
      * @returns zipCodes array to save to localStorage
      */
     public getZipCodes = (): Observable<number[]> => {
-        const zipCodes = JSON.parse(localStorage.getItem(ZIP_CODES_LOCAL_STORAGE_KEY) ?? '[]');
+        const zipCodes = JSON.parse(
+            localStorage.getItem(config.ZIP_CODES_LOCAL_STORAGE_KEY) ?? '[]'
+        );
         this.zipCodesCache = zipCodes;
         return of(this.zipCodesCache);
     };
@@ -35,7 +36,7 @@ export class ZipCodeManagerService {
      * @param zipCodes zipCodes array to save to localStorage
      */
     private setZipCodes = (zipCodes: number[]): Observable<number[]> => {
-        localStorage.setItem(ZIP_CODES_LOCAL_STORAGE_KEY, JSON.stringify(zipCodes));
+        localStorage.setItem(config.ZIP_CODES_LOCAL_STORAGE_KEY, JSON.stringify(zipCodes));
         return this.getZipCodes();
     };
 }

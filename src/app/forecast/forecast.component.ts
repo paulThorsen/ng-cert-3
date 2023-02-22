@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { share } from 'rxjs/operators';
+import { config } from '../core/config';
 import { DayForecast } from '../core/models/day-forecast';
 import { WeatherService } from '../core/weather.service';
-
-const FORECASTED_DAYS = 5;
 
 @Component({
     selector: 'app-forecast',
@@ -24,7 +23,7 @@ export class ForecastComponent implements OnInit {
             this.zipCode = zipCode;
 
             this.weatherConditionsForZip$ = this.weather
-                .getDayForecaseByZip(zipCode, FORECASTED_DAYS)
+                .getDayForecaseByZip(zipCode, config.FORECASTED_DAYS)
                 .pipe(share());
         });
     }

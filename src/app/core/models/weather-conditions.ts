@@ -42,3 +42,8 @@ export interface Conditions {
     pressure: number;
     humidity: number;
 }
+
+export interface WeatherConditionsFromZip {
+    zipCode: number;
+    conditions: WeatherConditions;
+}
