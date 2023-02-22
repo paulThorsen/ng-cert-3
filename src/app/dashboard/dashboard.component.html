@@ -1,16 +1,15 @@
 <div class="card-wrapper--global">
     <form>
-        <h1>Enter a zipcode:</h1>
+        <label id="zipCodeLabel">Zip:</label>
         <input
             #zipCode="ngModel"
-            type="number"
+            type="text"
             id="zipCodeInput"
             name="zipCode"
             placeholder="Zipcode"
             required
             [(ngModel)]="zipCodeInput"
         />
-        <span *ngIf="showZipCodeHint" class="warning">Please enter a 5-digit zip code</span>
         <span *ngIf="errorText" class="warning">{{ errorText }}</span>
         <br />
         <button (click)="addLocation(zipCode.value)" class="btn--global">Add location</button>
@@ -21,7 +20,7 @@
     *ngFor="let weatherCondition of zipCodeWeatherConditions$ | async"
     class="card-wrapper--global"
 >
-    <div class="split">
+    <div class="dashboard-row">
         <div>
             <h2>{{ weatherCondition.conditions.name }} ({{ weatherCondition.zipCode }})</h2>
             <h3>Current conditions: {{ weatherCondition.conditions.weather[0].main }}</h3>
