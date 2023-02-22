@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 const ZIP_CODES_LOCAL_STORAGE_KEY = 'weatherZipCodes';
 

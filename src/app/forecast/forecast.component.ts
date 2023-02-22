@@ -23,7 +23,6 @@ export class ForecastComponent implements OnInit {
             const zipCode = parseInt(params.get('zipCode') as string);
             this.zipCode = zipCode;
 
-            // Only subscription is in the template
             this.weatherConditionsForZip$ = this.weather
                 .getDayForecaseByZip(zipCode, FORECASTED_DAYS)
                 // Broadcast to multiple "| async" pipes at once without multiple calls to services

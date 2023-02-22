@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { DayForecast } from './models/day-forecast';
 import { WeatherConditions } from './models/weather-conditions';
@@ -30,7 +30,6 @@ export class WeatherService {
         return this.httpClient.get<WeatherConditions>(uri).pipe(
             tap((wc) => this.weatherConditionsByZipCache.set(zipCode, wc)),
             catchError((err, caught) => {
-                console.log(err, caught);
                 return of(null);
             })
         );
@@ -49,7 +48,6 @@ export class WeatherService {
         return this.httpClient.get<DayForecast>(uri).pipe(
             tap((df) => this.dayForecastByZipCache.set(zipCode, df)),
             catchError((err, caught) => {
-                console.log(err, caught);
                 return of(null);
             })
         );
