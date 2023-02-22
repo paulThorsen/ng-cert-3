@@ -13,7 +13,6 @@ export class ZipCodeManagerService {
     public addZipCode = (zipCode: number): Observable<number[]> => {
         let updatedZipCodes = [...this.zipCodesCache];
         updatedZipCodes.push(zipCode);
-        console.log('adding zip ' + zipCode);
         return this.setZipCodes(updatedZipCodes);
     };
 
@@ -37,9 +36,7 @@ export class ZipCodeManagerService {
      * @param zipCodes zipCodes array to save to localStorage
      */
     private setZipCodes = (zipCodes: number[]): Observable<number[]> => {
-        console.log('setting codes ' + zipCodes);
         localStorage.setItem(ZIP_CODES_LOCAL_STORAGE_KEY, JSON.stringify(zipCodes));
-        // this.zipCodesSubject.next(zipCodes);
         return this.getZipCodes();
     };
 }

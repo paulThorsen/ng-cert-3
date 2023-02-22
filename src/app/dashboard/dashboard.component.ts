@@ -23,7 +23,6 @@ export class DashboardComponent implements OnInit {
         this.zipCodeWeatherConditions$ = obs.pipe(
             // Transform observable to Observable<WeatherConditionsFromZip[]>
             switchMap((zipCodes) => {
-                console.log(zipCodes);
                 // combineLatest doesn't emit if there are no inner observables that have emitted (no zipcodes, for example)
                 if (!zipCodes.length) return of([]);
                 // Need to get an observable for each zip code
@@ -38,12 +37,9 @@ export class DashboardComponent implements OnInit {
                         })
                     )
                 );
-                // This should be an array of observables
-                console.log(arr);
                 // Combine array of observables to observable of array of values
                 return combineLatest(arr);
-            }),
-            tap((res) => console.log(res))
+            })
         );
     }
 
