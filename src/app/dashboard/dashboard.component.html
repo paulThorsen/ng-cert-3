@@ -9,11 +9,18 @@
             placeholder="Zipcode"
             required
             [(ngModel)]="zipCodeInput"
+            data-testid="zipInput"
         />
         <span *ngIf="errorText" class="warning">{{ errorText }}</span>
         <br />
-        <button (click)="addLocation(zipCode.value)" class="btn--global">Add location</button>
-        <span *ngIf="isLoading" class="loader"></span>
+        <button
+            (click)="addLocation(zipCode.value)"
+            class="btn--global"
+            data-testid="addLocationButton"
+        >
+            Add location
+        </button>
+        <span *ngIf="isLoading" class="loader" data-testid="loader"></span>
     </form>
 </div>
 <div

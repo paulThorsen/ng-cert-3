@@ -1,2 +1,2 @@
-export const mockZip = 84606;
-export const mockMultipleZipCodes = [mockZip, 75248];
+export const mockZip = '84606';
+export const mockMultipleZipCodes = [mockZip, '75248'];

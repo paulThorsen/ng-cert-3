@@ -1,8 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
-import { click, expectNoEl, findEl, findEls } from '../core/testing/element.spec-helper';
+import { delay, of } from 'rxjs';
+import {
+    click,
+    expectNoEl,
+    findEl,
+    findEls,
+    setFieldValue,
+} from '../core/testing/element.spec-helper';
 import { MockWeatherService, MockZipCodeService } from '../core/testing/mock-classes';
 import { mockDallasWeather } from '../core/testing/mock-data/mock-dallas-weather';
 import { mockMultipleZipCodes, mockZip } from '../core/testing/mock-data/mock-data';
@@ -89,4 +95,29 @@ describe('DashboardComponent', () => {
         click(fixture, 'removeZipButton');
         expect(removeZipCodeSpy).toHaveBeenCalledWith(mockZip);
     });
+
+    it('calls `zipCodeService.addZipCode()` with the zip code when the user enters a zip code and clicks add location (if the zip code returns weather)', fakeAsync(() => {
+        const addZipCodeSpy = spyOn(
+            TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
+            'addZipCode'
+        );
+        // Delay response to test loader
+        weatherServiceSpy.and.returnValue(of(mockProvoWeather).pipe(delay(100)));
+        setFieldValue(fixture, 'zipInput', mockZip + '');
+        fixture.detectChanges();
+        click(fixture, 'addLocationButton');
+        fixture.detectChanges();
+        expect(findEl(fixture, 'loader')).toBeTruthy();
+        tick(100);
+        fixture.detectChanges();
+        // All calls have completed. Assert below
+        expectNoEl(fixture, 'loader');
+        expect(addZipCodeSpy).toHaveBeenCalledWith(mockZip);
+        expect(weatherServiceSpy).toHaveBeenCalledWith(mockZip);
+        // Wait for stable before testing template forms
+        // See: https://stackoverflow.com/a/49665237/11790081
+        fixture.whenStable().then(() => {
+            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe('');
+        });
+    }));
 });

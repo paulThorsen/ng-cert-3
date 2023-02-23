@@ -6,13 +6,13 @@ import { config } from './config';
     providedIn: 'root',
 })
 export class ZipCodeService {
-    private zipCodesSubject = new BehaviorSubject<number[]>([]);
+    private zipCodesSubject = new BehaviorSubject<string[]>([]);
 
     constructor() {
         this.getZipCodes();
     }
 
-    public getZipCodesSubjectAsObservable = (): Observable<number[]> =>
+    public getZipCodesSubjectAsObservable = (): Observable<string[]> =>
         this.zipCodesSubject.asObservable();
 
     /**
@@ -20,7 +20,7 @@ export class ZipCodeService {
      *
      * @param zipCode zip code to add
      */
-    public addZipCode = (zipCode: number): void => {
+    public addZipCode = (zipCode: string): void => {
         let updatedZipCodes = [...this.zipCodesSubject.value];
         updatedZipCodes.push(zipCode);
         this.setZipCodes(updatedZipCodes);
@@ -31,7 +31,7 @@ export class ZipCodeService {
      *
      * @param zipCode zip code to add
      */
-    public removeZipCode = (zipCode: number): void => {
+    public removeZipCode = (zipCode: string): void => {
         let updatedZipCodes = this.zipCodesSubject.value.filter((zip) => zip !== zipCode);
         this.setZipCodes(updatedZipCodes);
     };
@@ -51,7 +51,7 @@ export class ZipCodeService {
      * Adds zip codes to `localStorage`, the calls `getZipCodes()`
      * @param zipCodes zip code array to save to `localStorage`
      */
-    private setZipCodes = (zipCodes: number[]): void => {
+    private setZipCodes = (zipCodes: string[]): void => {
         localStorage.setItem(config.ZIP_CODES_LOCAL_STORAGE_KEY, JSON.stringify(zipCodes));
         this.getZipCodes();
     };

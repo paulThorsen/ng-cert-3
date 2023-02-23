@@ -44,6 +44,6 @@ export interface Conditions {
 }
 
 export interface WeatherConditionsFromZip {
-    zipCode: number;
+    zipCode: string;
     conditions: WeatherConditions;
 }

@@ -10,12 +10,12 @@ import { WeatherConditions } from './models/weather-conditions';
     providedIn: 'root',
 })
 export class WeatherService {
-    private weatherConditionsByZipCache = new Map<number, WeatherConditions>();
-    private dayForecastByZipCache = new Map<number, DayForecast>();
+    private weatherConditionsByZipCache = new Map<string, WeatherConditions>();
+    private dayForecastByZipCache = new Map<string, DayForecast>();
 
     constructor(private httpClient: HttpClient) {}
 
-    public getWeatherConditionsByZip = (zip: number): Observable<WeatherConditions> => {
+    public getWeatherConditionsByZip = (zip: string): Observable<WeatherConditions> => {
         if (this.weatherConditionsByZipCache.has(zip)) {
             return of(this.weatherConditionsByZipCache.get(zip) as WeatherConditions);
         }
@@ -26,7 +26,7 @@ export class WeatherService {
             .pipe(tap((wc) => this.weatherConditionsByZipCache.set(zip, wc)));
     };
 
-    public getDayForecastByZip = (zip: number, days: number): Observable<DayForecast> => {
+    public getDayForecastByZip = (zip: string, days: number): Observable<DayForecast> => {
         if (this.dayForecastByZipCache.has(zip)) {
             return of(this.dayForecastByZipCache.get(zip) as DayForecast);
         }

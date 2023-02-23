@@ -39,9 +39,9 @@ export class DashboardComponent {
 
     constructor(private weather: WeatherService, private zipCodes: ZipCodeService) {}
 
-    public addLocation = (zipCode: number): void => {
+    public addLocation = (zipCode: string): void => {
         this.errorText = '';
-        if (zipCode <= 9999 || zipCode > 99999) {
+        if (zipCode.length !== 5) {
             this.errorText = 'Please enter a 5 digit zip code';
             return;
         }
@@ -60,7 +60,7 @@ export class DashboardComponent {
         });
     };
 
-    public removeLocation = (zipCode: number): void => {
+    public removeLocation = (zipCode: string): void => {
         this.zipCodes.removeZipCode(zipCode);
     };
 }

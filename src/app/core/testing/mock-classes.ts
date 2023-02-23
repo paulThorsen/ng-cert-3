@@ -10,9 +10,9 @@ import { mockProvoWeather } from './mock-data/mock-provo-weather';
 export class MockWeatherService
     implements Pick<WeatherService, 'getDayForecastByZip' | 'getWeatherConditionsByZip'>
 {
-    public getWeatherConditionsByZip = (zip: number): Observable<WeatherConditions> =>
+    public getWeatherConditionsByZip = (zip: string): Observable<WeatherConditions> =>
         of(mockProvoWeather);
-    public getDayForecastByZip = (zip: number, days: number): Observable<DayForecast> =>
+    public getDayForecastByZip = (zip: string, days: number): Observable<DayForecast> =>
         of(mockProvo5DayForecast);
 }
 
@@ -20,10 +20,10 @@ export class MockZipCodeService
     implements
         Pick<ZipCodeService, 'addZipCode' | 'removeZipCode' | 'getZipCodesSubjectAsObservable'>
 {
-    private zipCodesSubject = new BehaviorSubject<number[]>(mockMultipleZipCodes);
-    public addZipCode = (zipCode: number) => {};
-    public removeZipCode = (zipCode: number) => {};
-    public getZipCodesSubjectAsObservable = (): Observable<number[]> =>
+    private zipCodesSubject = new BehaviorSubject<string[]>(mockMultipleZipCodes);
+    public addZipCode = (zipCode: string) => {};
+    public removeZipCode = (zipCode: string) => {};
+    public getZipCodesSubjectAsObservable = (): Observable<string[]> =>
         this.zipCodesSubject.asObservable();
-    public emitNewZipCodes = (zipCodes: number[]) => this.zipCodesSubject.next(zipCodes);
+    public emitNewZipCodes = (zipCodes: string[]) => this.zipCodesSubject.next(zipCodes);
 }

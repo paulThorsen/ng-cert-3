@@ -14,8 +14,8 @@ import { WeatherService } from '../core/weather.service';
 export class ForecastComponent {
     constructor(private route: ActivatedRoute, private weather: WeatherService) {}
 
-    zipCode$: Observable<number> = this.route.paramMap.pipe(
-        map((paramMap) => parseInt(paramMap.get('zip') || ''))
+    zipCode$: Observable<string> = this.route.paramMap.pipe(
+        map((paramMap) => paramMap.get('zip') || '')
     );
 
     weatherConditionsForZip$: Observable<DayForecast | null> = this.zipCode$.pipe(
