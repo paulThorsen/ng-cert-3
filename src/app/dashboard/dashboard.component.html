@@ -20,37 +20,43 @@
     *ngFor="let weatherCondition of zipCodeWeatherConditions$ | async"
     class="card-wrapper--global"
 >
-    <div class="dashboard-row">
+    <div class="dashboard-row" data-testid="weatherRow">
         <div>
-            <h2>{{ weatherCondition.conditions.name }} ({{ weatherCondition.zipCode }})</h2>
-            <h3>Current conditions: {{ weatherCondition.conditions.weather[0].main }}</h3>
-            <h4>
+            <h2 data-testid="name">
+                {{ weatherCondition.conditions.name }} ({{ weatherCondition.zipCode }})
+            </h2>
+            <h3 data-testid="conditions">
+                Current conditions: {{ weatherCondition.conditions.weather[0].main }}
+            </h3>
+            <h4 data-testid="temperatures">
                 Temperatures today: Current {{ weatherCondition.conditions.main.temp }} - Max
                 {{ weatherCondition.conditions.main.temp_max }} - Min
                 {{ weatherCondition.conditions.main.temp_min }}
             </h4>
-            <a [routerLink]="'forecast/' + weatherCondition.zipCode">View 5-day forecast</a>
+            <a [routerLink]="'forecast/' + weatherCondition.zipCode" data-testid="forecastLink"
+                >View 5-day forecast</a
+            >
         </div>
         <img
-            *ngIf="weatherCondition.conditions.weather[0].main === 'Clouds'"
-            class="icon"
-            src="https://www.angulartraining.com/images/weather/clouds.png"
-        />
-        <img
-            *ngIf="weatherCondition.conditions.weather[0].main === 'Clear'"
-            class="icon"
-            src="https://www.angulartraining.com/images/weather/sun.png"
-        />
-        <img
-            *ngIf="weatherCondition.conditions.weather[0].main === 'Rain'"
-            class="icon"
-            src="https://www.angulartraining.com/images/weather/rain.png"
-        />
-        <img
-            *ngIf="weatherCondition.conditions.weather[0].main === 'Snow'"
-            class="icon"
-            src="https://www.angulartraining.com/images/weather/snow.png"
+            *ngIf="
+                weatherCondition.conditions.weather[0].main === 'Clouds' ||
+                weatherCondition.conditions.weather[0].main === 'Clear' ||
+                weatherCondition.conditions.weather[0].main === 'Rain' ||
+                weatherCondition.conditions.weather[0].main === 'Snow'
+            "
+            [src]="
+                '/assets/weather-icons/' +
+                (weatherCondition.conditions.weather[0].main | lowercase) +
+                '.png'
+            "
+            data-testid="icon"
         />
     </div>
-    <button class="close" (click)="removeLocation(weatherCondition.zipCode)">&#215;</button>
+    <button
+        class="close"
+        data-testid="removeZipButton"
+        (click)="removeLocation(weatherCondition.zipCode)"
+    >
+        &#215;
+    </button>
 </div>

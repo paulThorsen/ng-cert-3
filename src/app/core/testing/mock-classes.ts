@@ -1,8 +1,9 @@
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { DayForecast } from '../models/day-forecast';
 import { WeatherConditions } from '../models/weather-conditions';
 import { WeatherService } from '../weather.service';
 import { ZipCodeService } from '../zip-code.service';
+import { mockMultipleZipCodes } from './mock-data/mock-data';
 import { mockProvo5DayForecast } from './mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from './mock-data/mock-provo-weather';
 
@@ -19,7 +20,10 @@ export class MockZipCodeService
     implements
         Pick<ZipCodeService, 'addZipCode' | 'removeZipCode' | 'getZipCodesSubjectAsObservable'>
 {
+    private zipCodesSubject = new BehaviorSubject<number[]>(mockMultipleZipCodes);
     public addZipCode = (zipCode: number) => {};
     public removeZipCode = (zipCode: number) => {};
-    public getZipCodesSubjectAsObservable = (): Observable<number[]> => of([0]);
+    public getZipCodesSubjectAsObservable = (): Observable<number[]> =>
+        this.zipCodesSubject.asObservable();
+    public emitNewZipCodes = (zipCodes: number[]) => this.zipCodesSubject.next(zipCodes);
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { forkJoin, iif, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/weather.service';
@@ -15,7 +15,7 @@ export class DashboardComponent {
     errorText = '';
     zipCodeInput = '';
 
-    zipCodeWeatherConditions$: Observable<WeatherConditionsFromZip[]> = this.zipCodeManager
+    zipCodeWeatherConditions$: Observable<WeatherConditionsFromZip[]> = this.zipCodes
         .getZipCodesSubjectAsObservable()
         .pipe(
             switchMap((zipCodes) =>
@@ -37,7 +37,7 @@ export class DashboardComponent {
             )
         );
 
-    constructor(private weather: WeatherService, private zipCodeManager: ZipCodeService) {}
+    constructor(private weather: WeatherService, private zipCodes: ZipCodeService) {}
 
     public addLocation = (zipCode: number): void => {
         this.errorText = '';
@@ -48,7 +48,7 @@ export class DashboardComponent {
         this.isLoading = true;
         this.weather.getWeatherConditionsByZip(zipCode).subscribe({
             next: () => {
-                this.zipCodeManager.addZipCode(zipCode);
+                this.zipCodes.addZipCode(zipCode);
                 this.isLoading = false;
                 this.zipCodeInput = '';
             },
@@ -61,6 +61,6 @@ export class DashboardComponent {
     };
 
     public removeLocation = (zipCode: number): void => {
-        this.zipCodeManager.removeZipCode(zipCode);
+        this.zipCodes.removeZipCode(zipCode);
     };
 }
