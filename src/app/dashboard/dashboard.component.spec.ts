@@ -1,10 +1,11 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { delay, of } from 'rxjs';
+import { delay, of, tap, throwError } from 'rxjs';
 import {
     click,
     expectNoEl,
+    expectText,
     findEl,
     findEls,
     setFieldValue,
@@ -103,7 +104,7 @@ describe('DashboardComponent', () => {
         );
         // Delay response to test loader
         weatherServiceSpy.and.returnValue(of(mockProvoWeather).pipe(delay(100)));
-        setFieldValue(fixture, 'zipInput', mockZip + '');
+        setFieldValue(fixture, 'zipInput', mockZip);
         fixture.detectChanges();
         click(fixture, 'addLocationButton');
         fixture.detectChanges();
@@ -118,6 +119,68 @@ describe('DashboardComponent', () => {
         // See: https://stackoverflow.com/a/49665237/11790081
         fixture.whenStable().then(() => {
             expect(findEl(fixture, 'zipInput').nativeElement.value).toBe('');
+        });
+    }));
+
+    it("displays error text and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is less than 5 digits when the add location button is clicked", () => {
+        const fourDigitzip = '2334';
+        setFieldValue(fixture, 'zipInput', fourDigitzip);
+        fixture.detectChanges();
+        click(fixture, 'addLocationButton');
+        fixture.detectChanges();
+        expectText(fixture, 'errorText', 'Please enter a 5 digit zip code');
+        // Account for first two calls in setup, but no more
+        expect(weatherServiceSpy.calls.count()).toBe(2);
+        fixture.whenStable().then(() => {
+            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(fourDigitzip);
+        });
+    });
+
+    it("displays error text and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is more than 5 digits when the add location button is clicked", () => {
+        const sixDigitzip = '233443';
+        setFieldValue(fixture, 'zipInput', sixDigitzip);
+        fixture.detectChanges();
+        click(fixture, 'addLocationButton');
+        fixture.detectChanges();
+        expectText(fixture, 'errorText', 'Please enter a 5 digit zip code');
+        // Account for first two calls in setup, but no more
+        expect(weatherServiceSpy.calls.count()).toBe(2);
+        fixture.whenStable().then(() => {
+            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(sixDigitzip);
+        });
+    });
+
+    it("displays error text and doesn't call `zipCodeService.addZipCode()` if the zip code doesn't return weather when the add location button is clicked", fakeAsync(() => {
+        const addZipCodeSpy = spyOn(
+            TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
+            'addZipCode'
+        );
+        weatherServiceSpy.and.returnValue(
+            of(null).pipe(
+                delay(100),
+                tap(() => {
+                    // Simulate no weather returned
+                    throw new Error();
+                })
+            )
+        );
+        setFieldValue(fixture, 'zipInput', mockZip);
+        fixture.detectChanges();
+        click(fixture, 'addLocationButton');
+        fixture.detectChanges();
+        expect(findEl(fixture, 'loader')).toBeTruthy();
+        tick(100);
+        fixture.detectChanges();
+        // All calls have completed. Assert below
+        expectNoEl(fixture, 'loader');
+        expectText(
+            fixture,
+            'errorText',
+            `Could not find data for zipcode ${mockZip}. Please try another zipcode.`
+        );
+        expect(addZipCodeSpy).not.toHaveBeenCalled();
+        fixture.whenStable().then(() => {
+            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(mockZip);
         });
     }));
 });

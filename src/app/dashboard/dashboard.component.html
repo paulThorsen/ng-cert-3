@@ -11,7 +11,7 @@
             [(ngModel)]="zipCodeInput"
             data-testid="zipInput"
         />
-        <span *ngIf="errorText" class="warning">{{ errorText }}</span>
+        <span *ngIf="errorText" class="warning" data-testid="errorText">{{ errorText }}</span>
         <br />
         <button
             (click)="addLocation(zipCode.value)"
