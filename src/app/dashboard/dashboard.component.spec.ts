@@ -122,13 +122,13 @@ describe('DashboardComponent', () => {
         });
     }));
 
-    it("displays error text and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is less than 5 digits when the add location button is clicked", () => {
+    it("displays lengthError and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is less than 5 digits when the add location button is clicked", () => {
         const fourDigitzip = '2334';
         setFieldValue(fixture, 'zipInput', fourDigitzip);
         fixture.detectChanges();
         click(fixture, 'addLocationButton');
         fixture.detectChanges();
-        expectText(fixture, 'errorText', 'Please enter a 5 digit zip code');
+        expectText(fixture, 'lengthError', ' Please enter a 5 digit zip code. ');
         // Account for first two calls in setup, but no more
         expect(weatherServiceSpy.calls.count()).toBe(2);
         fixture.whenStable().then(() => {
@@ -136,13 +136,12 @@ describe('DashboardComponent', () => {
         });
     });
 
-    it("displays error text and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is more than 5 digits when the add location button is clicked", () => {
+    it("doesn't allow for more than 5 digits in the zip code input", () => {
         const sixDigitzip = '233443';
         setFieldValue(fixture, 'zipInput', sixDigitzip);
         fixture.detectChanges();
         click(fixture, 'addLocationButton');
         fixture.detectChanges();
-        expectText(fixture, 'errorText', 'Please enter a 5 digit zip code');
         // Account for first two calls in setup, but no more
         expect(weatherServiceSpy.calls.count()).toBe(2);
         fixture.whenStable().then(() => {
@@ -150,7 +149,7 @@ describe('DashboardComponent', () => {
         });
     });
 
-    it("displays error text and doesn't call `zipCodeService.addZipCode()` if the zip code doesn't return weather when the add location button is clicked", fakeAsync(() => {
+    it("displays badZipError and doesn't call `zipCodeService.addZipCode()` if the zip code doesn't return weather when the add location button is clicked", fakeAsync(() => {
         const addZipCodeSpy = spyOn(
             TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
             'addZipCode'
@@ -175,7 +174,7 @@ describe('DashboardComponent', () => {
         expectNoEl(fixture, 'loader');
         expectText(
             fixture,
-            'errorText',
+            'badZipError',
             `Could not find data for zipcode ${mockZip}. Please try another zipcode.`
         );
         expect(addZipCodeSpy).not.toHaveBeenCalled();

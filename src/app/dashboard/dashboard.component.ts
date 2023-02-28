@@ -11,53 +11,51 @@ import { ZipCodeService } from '../core/zip-code.service';
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-    isLoading = false;
-    errorText = '';
-    zipCodeInput = '';
-
-    zipCodeWeatherConditions$: Observable<WeatherConditionsFromZip[]> = this.zipCodes
-        .getZipCodesSubjectAsObservable()
-        .pipe(
-            switchMap((zipCodes) =>
-                !zipCodes.length
-                    ? of([])
-                    : forkJoin(
-                          zipCodes.map((zip) =>
-                              this.weather.getWeatherConditionsByZip(zip).pipe(
-                                  // Convert WeatherConditions to WeatherConditionsFromZip
-                                  map((weather): WeatherConditionsFromZip => {
-                                      return {
-                                          zipCode: zip,
-                                          conditions: weather,
-                                      };
-                                  })
-                              )
+    public isLoading = false;
+    public isSubmitted = false;
+    public zipHasNoWeather = false;
+    public zipCodeInput = '';
+    public zipCodes$ = this.zipCodes.getZipCodesSubjectAsObservable();
+    public zipCodeWeatherConditions$: Observable<WeatherConditionsFromZip[]> = this.zipCodes$.pipe(
+        switchMap((zipCodes) =>
+            !zipCodes.length
+                ? of([])
+                : forkJoin(
+                      zipCodes.map((zip) =>
+                          this.weather.getWeatherConditionsByZip(zip).pipe(
+                              // Convert WeatherConditions to WeatherConditionsFromZip
+                              map((weather): WeatherConditionsFromZip => {
+                                  return {
+                                      zipCode: zip,
+                                      conditions: weather,
+                                  };
+                              })
                           )
                       )
-            )
-        );
+                  )
+        )
+    );
 
     constructor(private weather: WeatherService, private zipCodes: ZipCodeService) {}
 
-    public addLocation = (zipCode: string): void => {
-        this.errorText = '';
-        if (zipCode.length !== 5) {
-            this.errorText = 'Please enter a 5 digit zip code';
-            return;
+    public addLocation = (zipCode: string, isFormValid: boolean): void => {
+        this.isSubmitted = true;
+        this.zipHasNoWeather = false;
+        if (isFormValid) {
+            this.isLoading = true;
+            this.weather.getWeatherConditionsByZip(zipCode).subscribe({
+                next: () => {
+                    this.zipCodes.addZipCode(zipCode);
+                    this.zipCodeInput = '';
+                    this.isSubmitted = false;
+                    this.isLoading = false;
+                },
+                error: () => {
+                    this.zipHasNoWeather = true;
+                    this.isLoading = false;
+                },
+            });
         }
-        this.isLoading = true;
-        this.weather.getWeatherConditionsByZip(zipCode).subscribe({
-            next: () => {
-                this.zipCodes.addZipCode(zipCode);
-                this.isLoading = false;
-                this.zipCodeInput = '';
-            },
-            error: () => {
-                this.errorText =
-                    'Could not find data for zipcode ' + zipCode + '. Please try another zipcode.';
-                this.isLoading = false;
-            },
-        });
     };
 
     public removeLocation = (zipCode: string): void => {

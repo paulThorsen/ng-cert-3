@@ -1,6 +1,6 @@
 <div class="card-wrapper--global">
     <form>
-        <label id="zipCodeLabel">Zip:</label>
+        <label id="zipCodeLabel" for="zipCodeInput">Zip:</label>
         <input
             #zipCode="ngModel"
             type="text"
@@ -9,12 +9,30 @@
             placeholder="Zipcode"
             required
             [(ngModel)]="zipCodeInput"
+            appDuplicateZipValidator
+            minlength="5"
+            maxlength="5"
             data-testid="zipInput"
+            (ngModelChange)="isSubmitted = false"
         />
-        <span *ngIf="errorText" class="warning" data-testid="errorText">{{ errorText }}</span>
+        <span
+            *ngIf="isSubmitted && zipCode.invalid && (zipCode.dirty || zipCode.touched)"
+            class="warning"
+        >
+            <span *ngIf="zipCode.errors?.['minlength']" data-testid="lengthError">
+                Please enter a 5 digit zip code.
+            </span>
+            <span *ngIf="zipCode.errors?.['duplicateZip']"
+                >Duplicate zip code. Please try another.</span
+            >
+        </span>
+        <span *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError"
+            >Could not find data for zipcode {{ zipCode.value }}. Please try another zipcode.</span
+        >
         <br />
         <button
-            (click)="addLocation(zipCode.value)"
+            type="submit"
+            (click)="addLocation(zipCode.value, zipCode.valid ?? false)"
             class="btn--global"
             data-testid="addLocationButton"
         >

@@ -6,9 +6,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForecastComponent } from './forecast/forecast.component';
+import { DuplicateZipValidatorDirective } from './duplicate-zip-validator.directive';
 
 @NgModule({
-    declarations: [AppComponent, DashboardComponent, ForecastComponent],
+    declarations: [AppComponent, DashboardComponent, ForecastComponent, DuplicateZipValidatorDirective],
     imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule],
     providers: [],
     bootstrap: [AppComponent],
