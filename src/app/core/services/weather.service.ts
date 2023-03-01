@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { config } from './config';
-import { DayForecast } from './models/day-forecast';
-import { WeatherConditions } from './models/weather-conditions';
+import { config } from '../config';
+import { DayForecast } from '../models/day-forecast';
+import { WeatherConditions } from '../models/weather-conditions';
 
 @Injectable({
     providedIn: 'root',

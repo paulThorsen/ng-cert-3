@@ -7,7 +7,7 @@ import { mockZip } from '../core/testing/mock-data/mock-data';
 import { mockProvo5DayForecast } from '../core/testing/mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
 import { weatherServiceSpy } from '../core/testing/spies';
-import { WeatherService } from '../core/weather.service';
+import { WeatherService } from '../core/services/weather.service';
 import { ForecastComponent } from './forecast.component';
 
 describe('ForecastComponent', () => {

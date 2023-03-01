@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
-import { WeatherService } from '../core/weather.service';
-import { ZipCodeService } from '../core/zip-code.service';
+import { WeatherService } from '../core/services/weather.service';
+import { ZipCodeService } from '../core/services/zip-code.service';
 
 @Component({
     selector: 'app-dashboard',

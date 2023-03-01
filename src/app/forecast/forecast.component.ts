@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map, share, switchMap } from 'rxjs/operators';
 import { config } from '../core/config';
 import { DayForecast } from '../core/models/day-forecast';
-import { WeatherService } from '../core/weather.service';
+import { WeatherService } from '../core/services/weather.service';
 
 @Component({
     selector: 'app-forecast',

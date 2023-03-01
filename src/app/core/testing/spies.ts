@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { WeatherService } from '../weather.service';
+import { WeatherService } from '../services/weather.service';
 import { mockProvo5DayForecast } from './mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from './mock-data/mock-provo-weather';
 
