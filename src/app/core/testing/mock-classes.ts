@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { DayForecast } from '../models/day-forecast';
 import { WeatherConditions } from '../models/weather-conditions';
 import { WeatherService } from '../services/weather.service';
-import { ZipCodeService } from '../zip-code.service';
+import { ZipCodeService } from '../services/zip-code.service';
 import { mockMultipleZipCodes } from './mock-data/mock-data';
 import { mockProvo5DayForecast } from './mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from './mock-data/mock-provo-weather';

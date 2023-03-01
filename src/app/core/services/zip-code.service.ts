@@ -1,22 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject as BehaviorSubject, Observable } from 'rxjs';
 import { config } from '../config';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ZipCodeService {
-    private zipCodesSubject = new BehaviorSubject<string[]>([]);
+    /**
+     * Returns zip codes from local storage.
+     *
+     * @returns zip codes from localStorage
+     */
+    private getZipCodesFromLocalStorage = (): string[] =>
+        JSON.parse(localStorage.getItem(config.ZIP_CODES_LOCAL_STORAGE_KEY) ?? '[]');
 
-    constructor() {
-        this.getZipCodes();
-    }
-
+    private zipCodesSubject = new BehaviorSubject<string[]>(this.getZipCodesFromLocalStorage());
     public getZipCodesSubjectAsObservable = (): Observable<string[]> =>
         this.zipCodesSubject.asObservable();
 
     /**
-     * Adds a zip code to the current array of codes, then calls `setZipCodes()`
+     * Adds a zip code to the current array of codes, then calls `setZipCodes()`.
      *
      * @param zipCode zip code to add
      */
@@ -27,9 +30,7 @@ export class ZipCodeService {
     };
 
     /**
-     * Removes a zip code from the current array of codes, then calls `setZipCodes()`
-     *
-     * @param zipCode zip code to add
+     * Removes a zip code from the current array of codes in localStorage and saved them.
      */
     public removeZipCode = (zipCode: string): void => {
         let updatedZipCodes = this.zipCodesSubject.value.filter((zip) => zip !== zipCode);
@@ -37,22 +38,18 @@ export class ZipCodeService {
     };
 
     /**
-     * Get zip codes from `localStorage`, then emits them via `zipCodesSubject`
-     * @returns zip code array from `localStorage`
+     * Emits zip codes from localStorage via `zipCodesSubject`.
      */
-    private getZipCodes = (): void => {
-        const zipCodes = JSON.parse(
-            localStorage.getItem(config.ZIP_CODES_LOCAL_STORAGE_KEY) ?? '[]'
-        );
+    private emitZipCodes = (): void => {
+        const zipCodes = this.getZipCodesFromLocalStorage();
         this.zipCodesSubject.next(zipCodes);
     };
 
     /**
-     * Adds zip codes to `localStorage`, the calls `getZipCodes()`
-     * @param zipCodes zip code array to save to `localStorage`
+     * Adds zip codes to `localStorage`, then calls `getZipCodes()`.
      */
     private setZipCodes = (zipCodes: string[]): void => {
         localStorage.setItem(config.ZIP_CODES_LOCAL_STORAGE_KEY, JSON.stringify(zipCodes));
-        this.getZipCodes();
+        this.emitZipCodes();
     };
 }

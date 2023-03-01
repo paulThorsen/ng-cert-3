@@ -15,8 +15,8 @@ import { mockDallasWeather } from '../core/testing/mock-data/mock-dallas-weather
 import { mockMultipleZipCodes, mockZip } from '../core/testing/mock-data/mock-data';
 import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
 import { WeatherService } from '../core/services/weather.service';
-import { ZipCodeService } from '../core/zip-code.service';
 import { DashboardComponent } from './dashboard.component';
+import { ZipCodeService } from '../core/services/zip-code.service';
 
 describe('DashboardComponent', () => {
     let fixture: ComponentFixture<DashboardComponent>;
