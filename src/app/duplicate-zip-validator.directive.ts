@@ -21,7 +21,6 @@ import { ZipCodeService } from './core/services/zip-code.service';
 export class DuplicateZipValidatorDirective implements AsyncValidator {
     constructor(private zipCodes: ZipCodeService) {}
     validate(control: AbstractControl): Observable<ValidationErrors | null> {
-        console.log('VALIDATING', control.value);
         return this.zipCodes.getZipCodesSubjectAsObservable().pipe(
             first(),
             map((zipCodes) => (zipCodes.includes(control.value) ? { duplicateZip: true } : null)),
