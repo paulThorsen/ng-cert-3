@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { forkJoin, interval, of } from 'rxjs';
-import { map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, forkJoin, interval, of } from 'rxjs';
+import { catchError, delay, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { ButtonState } from '../core/components/button/multi-state-button.component';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/services/weather.service';
 import { ZipCodeService } from '../core/services/zip-code.service';
@@ -11,7 +12,8 @@ import { ZipCodeService } from '../core/services/zip-code.service';
     styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-    public isLoading = false;
+    public submitStateSubject = new BehaviorSubject<ButtonState>('default');
+
     public isSubmitted = false;
     public zipHasNoWeather = false;
     public zipCodeInput = '';
@@ -49,19 +51,25 @@ export class DashboardComponent {
         this.isSubmitted = true;
         this.zipHasNoWeather = false;
         if (isFormValid) {
-            this.isLoading = true;
-            this.weather.getWeatherConditionsByZip(zipCode).subscribe({
-                next: () => {
-                    this.zipCodes.addZipCode(zipCode);
-                    this.zipCodeInput = '';
-                    this.isSubmitted = false;
-                    this.isLoading = false;
-                },
-                error: () => {
-                    this.zipHasNoWeather = true;
-                    this.isLoading = false;
-                },
-            });
+            this.submitStateSubject.next('loading');
+            this.weather
+                .getWeatherConditionsByZip(zipCode)
+                .pipe(
+                    tap(() => {
+                        this.zipCodes.addZipCode(zipCode);
+                        this.zipCodeInput = '';
+                        this.isSubmitted = false;
+                        this.submitStateSubject.next('complete');
+                    }),
+                    delay(1000),
+                    tap(() => this.submitStateSubject.next('default')),
+                    catchError((e) => {
+                        this.zipHasNoWeather = true;
+                        this.submitStateSubject.next('default');
+                        return of(e);
+                    })
+                )
+                .subscribe();
         }
     };
 

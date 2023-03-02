@@ -21,19 +21,3 @@ button {
     background-color: transparent;
     cursor: pointer;
 }
-
-.btn--global {
-    color: white;
-    background-color: rgb(14, 76, 156);
-    border: solid 0.1rem rgb(10, 58, 119);
-    border-radius: 0.4rem;
-    margin-top: 1rem;
-    padding: 0.2rem 0.6rem;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.btn--global:hover {
-    color: white;
-    background-color: rgb(10, 58, 119);
-}

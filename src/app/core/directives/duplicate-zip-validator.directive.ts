@@ -6,7 +6,7 @@ import {
     ValidationErrors,
 } from '@angular/forms';
 import { catchError, first, map, Observable, of } from 'rxjs';
-import { ZipCodeService } from './core/services/zip-code.service';
+import { ZipCodeService } from '../services/zip-code.service';
 
 @Directive({
     selector: '[appDuplicateZipValidator]',

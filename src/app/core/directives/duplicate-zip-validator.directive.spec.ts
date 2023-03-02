@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
-import { ZipCodeService } from './core/services/zip-code.service';
-import { MockZipCodeService } from './core/testing/mock-classes';
-import { mockZip } from './core/testing/mock-data/mock-data';
+import { ZipCodeService } from '../services/zip-code.service';
+import { MockZipCodeService } from '../testing/mock-classes';
+import { mockZip } from '../testing/mock-data/mock-data';
 import { DuplicateZipValidatorDirective } from './duplicate-zip-validator.directive';
 
 describe('DuplicateZipValidatorDirective', () => {

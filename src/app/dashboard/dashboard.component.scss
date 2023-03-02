@@ -33,15 +33,14 @@
 }
 
 .loader {
-    border: 0.2rem solid white;
+    border: 0.1rem solid white;
     border-radius: 100%;
     border-top: 0.2rem solid rgb(14, 76, 156);
-    width: 30px;
-    height: 30px;
+    width: 10px;
+    height: 10px;
     animation: spinAnimate 1s ease infinite;
     box-sizing: border-box;
-    margin-left: 1rem;
-    margin-top: 1rem;
+    display: inline-block;
 }
 
 @keyframes spinAnimate {

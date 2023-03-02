@@ -30,15 +30,18 @@
             >Could not find data for zipcode {{ zipCode.value }}. Please try another zipcode.</span
         >
         <br />
-        <button
-            type="submit"
-            (click)="addLocation(zipCode.value, zipCode.valid ?? false)"
-            class="btn--global"
-            data-testid="addLocationButton"
+        <app-multi-state-button
+            [buttonType]="'submit'"
+            [stateObservable$]="submitStateSubject.asObservable()"
+            (buttonClick)="addLocation(zipCode.value, zipCode.valid ?? false)"
         >
-            Add location
-        </button>
-        <span *ngIf="isLoading" class="loader" data-testid="loader"></span>
+            <div default>Add location</div>
+            <div loading>
+                <span class="loader"></span>
+                Loading
+            </div>
+            <div complete>Done</div>
+        </app-multi-state-button>
     </form>
 </div>
 <div
