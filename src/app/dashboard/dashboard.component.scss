@@ -1,12 +1,11 @@
-#zipCodeLabel {
+label {
     display: block;
     margin-bottom: 0.6rem;
     font-size: 1.4rem;
-}
 
-#zipCodeInput {
-    width: 25rem;
-    padding: 0.4rem;
+    &:not(:first-of-type) {
+        margin-top: 1rem;
+    }
 }
 
 .warning {

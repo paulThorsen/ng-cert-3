@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { BehaviorSubject, forkJoin, interval, of } from 'rxjs';
 import { catchError, delay, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { ButtonState } from '../core/components/button/multi-state-button.component';
+import { ButtonState } from '../core/components/multi-state-button/multi-state-button.component';
+import { countriesMap } from '../core/countries';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/services/weather.service';
 import { ZipCodeService } from '../core/services/zip-code.service';
@@ -17,6 +18,7 @@ export class DashboardComponent {
     public isSubmitted = false;
     public zipHasNoWeather = false;
     public zipCodeInput = '';
+    public countries = Array.from(countriesMap.keys());
 
     public zipCodes$ = this.zipCodes.getZipCodesSubjectAsObservable();
     public weatherConditionsRefreshTimer$ = this.zipCodes$.pipe(

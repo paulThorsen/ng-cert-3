@@ -1,0 +1,31 @@
+.input-wrapper {
+    position: relative;
+    width: 25rem;
+
+    .close {
+        position: absolute;
+        right: 0rem;
+        top: 0.5rem;
+    }
+}
+
+#options {
+    position: absolute;
+    top: 100%;
+    z-index: 1;
+    height: 8rem;
+    overflow: scroll;
+    background: white;
+    width: 25rem;
+    border: solid 0.1rem #ddd;
+    box-shadow: 0 0.2rem 0.4rem #ededed;
+
+    .option {
+        cursor: pointer;
+        padding: 0.3rem;
+
+        &:hover {
+            background-color: #bebebe;
+        }
+    }
+}

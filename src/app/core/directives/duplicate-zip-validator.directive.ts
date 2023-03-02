@@ -9,6 +9,7 @@ import { catchError, first, map, Observable, of } from 'rxjs';
 import { ZipCodeService } from '../services/zip-code.service';
 
 @Directive({
+    standalone: true,
     selector: '[appDuplicateZipValidator]',
     providers: [
         {

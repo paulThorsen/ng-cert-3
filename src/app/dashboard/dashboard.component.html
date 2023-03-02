@@ -1,35 +1,48 @@
 <div class="card-wrapper--global">
     <form>
-        <label id="zipCodeLabel" for="zipCodeInput">Zip:</label>
-        <input
-            #zipCode="ngModel"
-            type="text"
-            id="zipCodeInput"
-            name="zipCode"
-            placeholder="Zipcode"
-            required
-            [(ngModel)]="zipCodeInput"
-            appDuplicateZipValidator
-            minlength="5"
-            maxlength="5"
-            data-testid="zipInput"
-            (ngModelChange)="isSubmitted = false"
-        />
-        <span
-            *ngIf="isSubmitted && zipCode.invalid && (zipCode.dirty || zipCode.touched)"
-            class="warning"
-        >
-            <span *ngIf="zipCode.errors?.['minlength']" data-testid="lengthError">
-                Please enter a 5 digit zip code.
-            </span>
-            <span *ngIf="zipCode.errors?.['duplicateZip']"
-                >Duplicate zip code. Please try another.</span
+        <div>
+            <!-- ZIP -->
+            <label id="zipCodeLabel" for="zipCodeInput">Zip:</label>
+            <input
+                #zipCode="ngModel"
+                type="text"
+                id="zipCodeInput"
+                name="zipCode"
+                placeholder="Zip code"
+                required
+                [(ngModel)]="zipCodeInput"
+                appDuplicateZipValidator
+                minlength="5"
+                maxlength="5"
+                data-testid="zipInput"
+                (ngModelChange)="isSubmitted = false"
+            />
+            <span
+                *ngIf="isSubmitted && zipCode.invalid && (zipCode.dirty || zipCode.touched)"
+                class="warning"
             >
-        </span>
-        <span *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError"
-            >Could not find data for zipcode {{ zipCode.value }}. Please try another zipcode.</span
-        >
-        <br />
+                <span *ngIf="zipCode.errors?.['minlength']" data-testid="lengthError">
+                    Please enter a 5 digit zip code.
+                </span>
+                <span *ngIf="zipCode.errors?.['duplicateZip']"
+                    >Duplicate zip code. Please try another.</span
+                >
+            </span>
+            <span *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError"
+                >Could not find data for zipcode {{ zipCode.value }}. Please try another
+                zipcode.</span
+            >
+            <!-- COUNTRY -->
+            <label for="country">Country:</label>
+            <app-typeahead
+                [ariaLabel]="'Country'"
+                [id]="'country'"
+                [placeholder]="'Country name'"
+                [initValue]="'United States'"
+                [options]="countries"
+                >Country</app-typeahead
+            >
+        </div>
         <app-multi-state-button
             [buttonType]="'submit'"
             [stateObservable$]="submitStateSubject.asObservable()"

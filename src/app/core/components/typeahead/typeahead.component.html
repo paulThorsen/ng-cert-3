@@ -1,0 +1,26 @@
+<div class="input-wrapper">
+    <input
+        #input
+        [attr.aria-label]="ariaLabel"
+        [id]="id"
+        [placeholder]="placeholder"
+        (focus)="showOptions = true"
+        (blur)="showOptions = false"
+        [ngModel]="inputValueSubject.value"
+        (ngModelChange)="inputValueSubject.next(input.value)"
+        autocomplete="off"
+    />
+    <button *ngIf="inputValueSubject.value" class="close" (click)="inputValueSubject.next('')">
+        &#x2715;
+    </button>
+    <ng-container *ngIf="optionsDisplayed$ | async as optionsDisplayed">
+        <div *ngIf="showOptions && optionsDisplayed.length" id="options">
+            <div
+                *ngFor="let option of optionsDisplayed"
+                class="option"
+                (mousedown)="inputValueSubject.next(option)"
+                [innerHTML]="option | typeaheadMatch : inputValueSubject.value"
+            ></div>
+        </div>
+    </ng-container>
+</div>
