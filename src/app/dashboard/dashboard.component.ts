@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of, timer } from 'rxjs';
+import { delay, filter, map, repeat, switchMap, withLatestFrom } from 'rxjs/operators';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/services/weather.service';
 import { ZipCodeService } from '../core/services/zip-code.service';
@@ -15,12 +15,16 @@ export class DashboardComponent {
     public isSubmitted = false;
     public zipHasNoWeather = false;
     public zipCodeInput = '';
+
     public zipCodes$ = this.zipCodes.getZipCodesSubjectAsObservable();
-    public zipCodeWeatherConditions$: Observable<WeatherConditionsFromZip[]> = this.zipCodes$.pipe(
-        switchMap((zipCodes) =>
-            !zipCodes.length
-                ? of([])
-                : forkJoin(
+    public weatherConditionsRefreshTimer$ = this.zipCodes$.pipe(
+        switchMap((zipCodes) => (zipCodes.length ? timer(0, 30000) : of(-1)))
+    );
+    public zipCodeWeatherConditions$ = this.weatherConditionsRefreshTimer$.pipe(
+        withLatestFrom(this.zipCodes$),
+        switchMap(([timer, zipCodes]: [number, string[]]) =>
+            timer >= 0
+                ? forkJoin(
                       zipCodes.map((zip) =>
                           this.weather.getWeatherConditionsByZip(zip).pipe(
                               // Convert WeatherConditions to WeatherConditionsFromZip
@@ -33,6 +37,7 @@ export class DashboardComponent {
                           )
                       )
                   )
+                : of([])
         )
     );
 
