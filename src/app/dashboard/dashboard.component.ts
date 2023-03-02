@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { forkJoin, Observable, of, timer } from 'rxjs';
-import { delay, filter, map, repeat, switchMap, withLatestFrom } from 'rxjs/operators';
+import { forkJoin, interval, of } from 'rxjs';
+import { map, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/services/weather.service';
 import { ZipCodeService } from '../core/services/zip-code.service';
@@ -18,11 +18,13 @@ export class DashboardComponent {
 
     public zipCodes$ = this.zipCodes.getZipCodesSubjectAsObservable();
     public weatherConditionsRefreshTimer$ = this.zipCodes$.pipe(
-        switchMap((zipCodes) => (zipCodes.length ? timer(0, 30000) : of(-1)))
+        // Return -1 to indicate no zip codes
+        switchMap((zipCodes) => (zipCodes.length ? interval(30000).pipe(startWith(0)) : of(-1)))
     );
     public zipCodeWeatherConditions$ = this.weatherConditionsRefreshTimer$.pipe(
         withLatestFrom(this.zipCodes$),
         switchMap(([timer, zipCodes]: [number, string[]]) =>
+            // -1 indicates no zip codes
             timer >= 0
                 ? forkJoin(
                       zipCodes.map((zip) =>

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { delay, of, tap, throwError } from 'rxjs';
+import { delay, of, tap } from 'rxjs';
 import {
     click,
     expectNoEl,
@@ -182,4 +182,6 @@ describe('DashboardComponent', () => {
             expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(mockZip);
         });
     }));
+
+    // it("refreshes each zip code's weather conditions every 30 seconds", fakeAsync(() => {}));
 });
