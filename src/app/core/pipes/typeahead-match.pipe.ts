@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Transforms a typeahead option (`value`) into an HTML string that encloses the matching substring (`match`) in a `<strong>` element.
+ */
+
 @Pipe({
     standalone: true,
     name: 'typeaheadMatch',
