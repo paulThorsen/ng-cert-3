@@ -17,14 +17,9 @@
             <div *ngIf="isSubmitted && zipCode.invalid" class="warning">
                 <span *ngIf="zipCode.errors?.['required']">Please enter a zip code.</span>
             </div>
-            <span
-                *ngIf="zipHasNoWeather"
-                class="warning"
-                data-testid="badZipError"
-                style="float: right"
-                >Could not find data for zipcode {{ zipCode.value }}. Please try another
-                zipcode.</span
-            >
+            <div *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError">
+                Could not find data for zipcode {{ zipCode.value }}. Please try another zipcode.
+            </div>
             <!-- COUNTRY -->
             <label for="country">Country:</label>
             <app-typeahead
