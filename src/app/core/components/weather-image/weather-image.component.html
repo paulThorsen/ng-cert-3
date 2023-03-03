@@ -1,6 +1,6 @@
 <img
     *ngIf="conditionImages.includes(condition)"
     [ngStyle]="styles"
-    [src]="'/assets/weather-icons/' + (condition | lowercase) + '.png'"
+    [src]="'assets/weather-icons/' + (condition | lowercase) + '.png'"
     data-testid="weatherImage"
 />
