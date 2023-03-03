@@ -26,6 +26,7 @@ import { LocationService } from '../core/services/location.service';
 import { TypeaheadComponent } from '../core/components/typeahead/typeahead.component';
 import { MultiStateButtonComponent } from '../core/components/multi-state-button/multi-state-button.component';
 import { countriesMap } from '../core/countries';
+import { WeatherImageComponent } from '../core/components/weather-image/weather-image.component';
 
 describe('DashboardComponent', () => {
     let fixture: ComponentFixture<DashboardComponent>;
@@ -40,6 +41,7 @@ describe('DashboardComponent', () => {
                 FormsModule,
                 TypeaheadComponent,
                 MultiStateButtonComponent,
+                WeatherImageComponent,
             ],
             declarations: [DashboardComponent],
             providers: [
@@ -87,7 +89,7 @@ describe('DashboardComponent', () => {
     it('displays the correct icon image if available', () => {
         weatherServiceSpy.and.returnValue(of(mockDallasWeather));
         locationService.emitNewLocations([mockLocation]);
-        const iconEl = findEl(fixture, 'icon');
+        const iconEl = findEl(fixture, 'weatherImage');
         expect(iconEl).toBeTruthy();
         expect(iconEl.attributes['src']).toBe(
             `/assets/weather-icons/${mockDallasWeather.weather[0].main.toLowerCase()}.png`
@@ -99,7 +101,7 @@ describe('DashboardComponent', () => {
         weatherServiceSpy.and.returnValue(of(mockProvoWeather));
         locationService.emitNewLocations([mockLocation]);
         fixture.detectChanges();
-        expectNoEl(fixture, 'icon');
+        expectNoEl(fixture, 'weatherImage');
     });
 
     it('calls `LocationService.removeLocation()` with the location when the close button is clicked', () => {

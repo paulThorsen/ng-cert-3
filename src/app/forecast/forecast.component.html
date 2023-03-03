@@ -10,16 +10,10 @@
                 <strong>{{ day.dt * 1000 | date : 'EEEE LLL d' }}:</strong>
                 {{ day.weather[0].main }} - High: {{ day.temp.max }} - Low: {{ day.temp.min }}
             </div>
-            <img
-                *ngIf="
-                    day.weather[0].main === 'Clouds' ||
-                    day.weather[0].main === 'Clear' ||
-                    day.weather[0].main === 'Rain' ||
-                    day.weather[0].main === 'Snow'
-                "
-                [src]="'/assets/weather-icons/' + (day.weather[0].main | lowercase) + '.png'"
-                data-testid="icon"
-            />
+            <app-weather-image
+                [condition]="day.weather[0].main"
+                [styles]="{ 'max-height': '45px' }"
+            ></app-weather-image>
         </div>
     </div>
 </div>

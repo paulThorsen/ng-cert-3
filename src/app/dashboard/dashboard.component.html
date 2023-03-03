@@ -76,20 +76,9 @@
                 >View 5-day forecast</a
             >
         </div>
-        <img
-            *ngIf="
-                weatherCondition.conditions.weather[0].main === 'Clouds' ||
-                weatherCondition.conditions.weather[0].main === 'Clear' ||
-                weatherCondition.conditions.weather[0].main === 'Rain' ||
-                weatherCondition.conditions.weather[0].main === 'Snow'
-            "
-            [src]="
-                '/assets/weather-icons/' +
-                (weatherCondition.conditions.weather[0].main | lowercase) +
-                '.png'
-            "
-            data-testid="icon"
-        />
+        <app-weather-image
+            [condition]="weatherCondition.conditions.weather[0].main"
+        ></app-weather-image>
     </div>
     <button
         class="close"

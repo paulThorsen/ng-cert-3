@@ -9,13 +9,14 @@ import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
 import { weatherServiceSpy } from '../core/testing/spies';
 import { WeatherService } from '../core/services/weather.service';
 import { ForecastComponent } from './forecast.component';
+import { WeatherImageComponent } from '../core/components/weather-image/weather-image.component';
 
 describe('ForecastComponent', () => {
     let fixture: ComponentFixture<ForecastComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
+            imports: [RouterTestingModule, WeatherImageComponent],
             declarations: [ForecastComponent],
             providers: [
                 { provide: WeatherService, useValue: weatherServiceSpy },
@@ -43,7 +44,7 @@ describe('ForecastComponent', () => {
         const daysIncludingIcons = mockProvo5DayForecast.list.filter((dayForecast) =>
             availableIconWeatherTypes.includes(dayForecast.weather[0].main.toLowerCase())
         );
-        const iconEls = findEls(fixture, 'icon');
+        const iconEls = findEls(fixture, 'weatherImage');
         expect(iconEls.length).toBe(daysIncludingIcons.length);
         // Ensure the src links point to the correct icons
         iconEls.forEach((iconEl, i) =>
