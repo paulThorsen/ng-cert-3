@@ -159,7 +159,7 @@ describe('DashboardComponent', () => {
         expectText(
             fixture,
             'badZipError',
-            `Could not find data for zipcode ${mockLocation.zipCode}. Please try another zipcode.`
+            ` Could not find data for zipcode ${mockLocation.zipCode}. Please try another zipcode. `
         );
         expect(addZipCodeSpy).not.toHaveBeenCalled();
         fixture.whenStable().then(() => {
