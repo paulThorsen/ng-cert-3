@@ -14,7 +14,14 @@
                 data-testid="zipInput"
                 (ngModelChange)="isSubmitted = zipHasNoWeather = false"
             />
-            <span *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError"
+            <div *ngIf="isSubmitted && zipCode.invalid" class="warning">
+                <span *ngIf="zipCode.errors?.['required']">Please enter a zip code.</span>
+            </div>
+            <span
+                *ngIf="zipHasNoWeather"
+                class="warning"
+                data-testid="badZipError"
+                style="float: right"
                 >Could not find data for zipcode {{ zipCode.value }}. Please try another
                 zipcode.</span
             >
@@ -29,6 +36,7 @@
                 (inputValue)="countryValue = $event"
                 >Country</app-typeahead
             >
+            <div *ngIf="isSubmitted && !countryValue" class="warning">Please enter a country.</div>
         </div>
         <app-multi-state-button
             [buttonType]="'submit'"

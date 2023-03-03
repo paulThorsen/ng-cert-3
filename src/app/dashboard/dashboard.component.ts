@@ -59,7 +59,7 @@ export class DashboardComponent {
     public addLocation = (zipCode: string, isFormValid: boolean): void => {
         this.isSubmitted = true;
         this.zipHasNoWeather = false;
-        if (isFormValid) {
+        if (isFormValid && this.countryValue) {
             this.submitStateSubject.next('loading');
             this.weather
                 .getWeatherConditionsByZip(zipCode, countriesMap.get(this.countryValue) as string)
