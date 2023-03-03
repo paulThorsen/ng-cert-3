@@ -1,3 +1,4 @@
+import { Location } from '../services/location.service';
 import { Coordinates, Weather } from './day-forecast';
 
 export interface WeatherConditions {
@@ -44,6 +45,6 @@ export interface Conditions {
 }
 
 export interface WeatherConditionsFromZip {
-    zipCode: string;
+    location: Location;
     conditions: WeatherConditions;
 }

@@ -1,4 +1,10 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    discardPeriodicTasks,
+    fakeAsync,
+    TestBed,
+    tick,
+} from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { delay, of, tap } from 'rxjs';
@@ -10,27 +16,35 @@ import {
     findEls,
     setFieldValue,
 } from '../core/testing/element.spec-helper';
-import { MockWeatherService, MockZipCodeService } from '../core/testing/mock-classes';
+import { MockWeatherService, MockLocationService } from '../core/testing/mock-classes';
 import { mockDallasWeather } from '../core/testing/mock-data/mock-dallas-weather';
-import { mockMultipleZipCodes, mockZip } from '../core/testing/mock-data/mock-data';
+import { mockMultipleLocations, mockLocation } from '../core/testing/mock-data/mock-data';
 import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
 import { WeatherService } from '../core/services/weather.service';
 import { DashboardComponent } from './dashboard.component';
-import { ZipCodeService } from '../core/services/zip-code.service';
+import { LocationService } from '../core/services/location.service';
+import { TypeaheadComponent } from '../core/components/typeahead/typeahead.component';
+import { MultiStateButtonComponent } from '../core/components/multi-state-button/multi-state-button.component';
+import { countriesMap } from '../core/countries';
 
 describe('DashboardComponent', () => {
     let fixture: ComponentFixture<DashboardComponent>;
     let weatherServiceSpy: jasmine.Spy;
-    let zipCodeService: MockZipCodeService;
+    let locationService: MockLocationService;
     const cityWeather = [mockProvoWeather, mockDallasWeather];
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RouterTestingModule, FormsModule],
+            imports: [
+                RouterTestingModule,
+                FormsModule,
+                TypeaheadComponent,
+                MultiStateButtonComponent,
+            ],
             declarations: [DashboardComponent],
             providers: [
                 { provide: WeatherService, useClass: MockWeatherService },
-                { provide: ZipCodeService, useClass: MockZipCodeService },
+                { provide: LocationService, useClass: MockLocationService },
             ],
         }).compileComponents();
 
@@ -40,19 +54,19 @@ describe('DashboardComponent', () => {
             'getWeatherConditionsByZip'
         ).and.returnValues(...cityWeather.map((cityWeather) => of(cityWeather)));
 
-        zipCodeService = TestBed.inject(ZipCodeService) as unknown as MockZipCodeService;
+        locationService = TestBed.inject(LocationService) as unknown as MockLocationService;
         fixture = TestBed.createComponent(DashboardComponent);
         fixture.detectChanges();
     });
 
     it('displays a weather row for each zip code from ZipCodeService', () => {
-        expect(findEls(fixture, 'weatherRow').length).toBe(mockMultipleZipCodes.length);
+        expect(findEls(fixture, 'weatherRow').length).toBe(mockMultipleLocations.length);
     });
 
     it('displays the correct name and zip for each zip code', () => {
         findEls(fixture, 'name').forEach((nameEl, i) => {
             expect(nameEl.nativeElement.innerText).toContain(cityWeather[i].name);
-            expect(nameEl.nativeElement.innerText).toContain(mockMultipleZipCodes[i]);
+            expect(nameEl.nativeElement.innerText).toContain(mockMultipleLocations[i].zipCode);
         });
     });
 
@@ -72,7 +86,7 @@ describe('DashboardComponent', () => {
 
     it('displays the correct icon image if available', () => {
         weatherServiceSpy.and.returnValue(of(mockDallasWeather));
-        zipCodeService.emitNewZipCodes([mockZip]);
+        locationService.emitNewLocations([mockLocation]);
         const iconEl = findEl(fixture, 'icon');
         expect(iconEl).toBeTruthy();
         expect(iconEl.attributes['src']).toBe(
@@ -83,103 +97,71 @@ describe('DashboardComponent', () => {
     it("doesn't display an icon image if unavailable", () => {
         // mockProvoWeather has weather condition (Mist) that we don't have an icon for
         weatherServiceSpy.and.returnValue(of(mockProvoWeather));
-        zipCodeService.emitNewZipCodes([mockZip]);
+        locationService.emitNewLocations([mockLocation]);
         fixture.detectChanges();
         expectNoEl(fixture, 'icon');
     });
 
-    it('calls `zipCodeService.removeZipCode()` when the close button is clicked', () => {
-        const removeZipCodeSpy = spyOn(
-            TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
-            'removeZipCode'
+    it('calls `LocationService.removeLocation()` with the location when the close button is clicked', () => {
+        const removeLocationSpy = spyOn(
+            TestBed.inject(LocationService) as unknown as MockLocationService,
+            'removeLocation'
         );
         click(fixture, 'removeZipButton');
-        expect(removeZipCodeSpy).toHaveBeenCalledWith(mockZip);
+        expect(removeLocationSpy).toHaveBeenCalledWith(mockLocation);
     });
 
-    it('calls `zipCodeService.addZipCode()` with the zip code when the user enters a zip code and clicks add location (if the zip code returns weather)', fakeAsync(() => {
-        const addZipCodeSpy = spyOn(
-            TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
-            'addZipCode'
+    it('calls `LocationService.addLocation()` with the new location when the user enters a zip code and clicks add location (if the zip code returns weather)', fakeAsync(() => {
+        const addLocationSpy = spyOn(
+            TestBed.inject(LocationService) as unknown as MockLocationService,
+            'addLocation'
         );
-        // Delay response to test loader
-        weatherServiceSpy.and.returnValue(of(mockProvoWeather).pipe(delay(100)));
-        setFieldValue(fixture, 'zipInput', mockZip);
+        weatherServiceSpy.and.returnValue(of(mockProvoWeather));
+        setFieldValue(fixture, 'zipInput', mockLocation.zipCode);
         fixture.detectChanges();
-        click(fixture, 'addLocationButton');
-        fixture.detectChanges();
-        expect(findEl(fixture, 'loader')).toBeTruthy();
-        tick(100);
+        click(fixture, 'multiStageButton');
         fixture.detectChanges();
         // All calls have completed. Assert below
-        expectNoEl(fixture, 'loader');
-        expect(addZipCodeSpy).toHaveBeenCalledWith(mockZip);
-        expect(weatherServiceSpy).toHaveBeenCalledWith(mockZip);
+        expect(addLocationSpy).toHaveBeenCalledWith(mockLocation.zipCode, mockLocation.country);
+        expect(weatherServiceSpy).toHaveBeenCalledWith(
+            mockLocation.zipCode,
+            countriesMap.get(mockLocation.country) as string
+        );
         // Wait for stable before testing template forms
         // See: https://stackoverflow.com/a/49665237/11790081
         fixture.whenStable().then(() => {
             expect(findEl(fixture, 'zipInput').nativeElement.value).toBe('');
         });
+        discardPeriodicTasks();
     }));
-
-    it("displays lengthError and doesn't call `weatherService.getWeatherConditionsByZip()` if the zip code entered is less than 5 digits when the add location button is clicked", () => {
-        const fourDigitzip = '2334';
-        setFieldValue(fixture, 'zipInput', fourDigitzip);
-        fixture.detectChanges();
-        click(fixture, 'addLocationButton');
-        fixture.detectChanges();
-        expectText(fixture, 'lengthError', ' Please enter a 5 digit zip code. ');
-        // Account for first two calls in setup, but no more
-        expect(weatherServiceSpy.calls.count()).toBe(2);
-        fixture.whenStable().then(() => {
-            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(fourDigitzip);
-        });
-    });
-
-    it("doesn't allow for more than 5 digits in the zip code input", () => {
-        const sixDigitzip = '233443';
-        setFieldValue(fixture, 'zipInput', sixDigitzip);
-        fixture.detectChanges();
-        click(fixture, 'addLocationButton');
-        fixture.detectChanges();
-        // Account for first two calls in setup, but no more
-        expect(weatherServiceSpy.calls.count()).toBe(2);
-        fixture.whenStable().then(() => {
-            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(sixDigitzip);
-        });
-    });
 
     it("displays badZipError and doesn't call `zipCodeService.addZipCode()` if the zip code doesn't return weather when the add location button is clicked", fakeAsync(() => {
         const addZipCodeSpy = spyOn(
-            TestBed.inject(ZipCodeService) as unknown as MockZipCodeService,
-            'addZipCode'
+            TestBed.inject(LocationService) as unknown as MockLocationService,
+            'addLocation'
         );
         weatherServiceSpy.and.returnValue(
             of(null).pipe(
-                delay(100),
                 tap(() => {
                     // Simulate no weather returned
                     throw new Error();
                 })
             )
         );
-        setFieldValue(fixture, 'zipInput', mockZip);
+        setFieldValue(fixture, 'zipInput', mockLocation.zipCode);
         fixture.detectChanges();
-        click(fixture, 'addLocationButton');
+        click(fixture, 'multiStageButton');
         fixture.detectChanges();
-        expect(findEl(fixture, 'loader')).toBeTruthy();
-        tick(100);
         fixture.detectChanges();
         // All calls have completed. Assert below
-        expectNoEl(fixture, 'loader');
         expectText(
             fixture,
             'badZipError',
-            `Could not find data for zipcode ${mockZip}. Please try another zipcode.`
+            `Could not find data for zipcode ${mockLocation.zipCode}. Please try another zipcode.`
         );
         expect(addZipCodeSpy).not.toHaveBeenCalled();
         fixture.whenStable().then(() => {
-            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(mockZip);
+            expect(findEl(fixture, 'zipInput').nativeElement.value).toBe(mockLocation);
         });
     }));
 

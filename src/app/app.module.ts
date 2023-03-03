@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MultiStateButtonComponent } from './core/components/multi-state-button/multi-state-button.component';
 import { TypeaheadComponent } from './core/components/typeahead/typeahead.component';
-import { DuplicateZipValidatorDirective } from './core/directives/duplicate-zip-validator.directive';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ForecastComponent } from './forecast/forecast.component';
 
@@ -19,7 +18,6 @@ import { ForecastComponent } from './forecast/forecast.component';
         HttpClientModule,
         MultiStateButtonComponent,
         TypeaheadComponent,
-        DuplicateZipValidatorDirective,
     ],
     providers: [],
     bootstrap: [AppComponent],

@@ -11,13 +11,20 @@ import { WeatherConditions } from '../models/weather-conditions';
 export class WeatherService {
     constructor(private httpClient: HttpClient) {}
 
-    public getWeatherConditionsByZip = (zip: string): Observable<WeatherConditions> => {
-        const uri = `${config.BASE_WEATHER_URL}weather?zip=${zip}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
+    public getWeatherConditionsByZip = (
+        zip: string,
+        countryCode: string
+    ): Observable<WeatherConditions> => {
+        const uri = `${config.BASE_WEATHER_URL}weather?zip=${zip},${countryCode}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
         return this.httpClient.get<WeatherConditions>(uri);
     };
 
-    public getDayForecastByZip = (zip: string, days: number): Observable<DayForecast> => {
-        const uri = `${config.BASE_WEATHER_URL}forecast/daily?zip=${zip}&cnt=${days}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
+    public getDayForecastByZip = (
+        zip: string,
+        countryCode: string,
+        days: number
+    ): Observable<DayForecast> => {
+        const uri = `${config.BASE_WEATHER_URL}forecast/daily?zip=${zip},${countryCode}&cnt=${days}&units=${config.UNIT_TYPE}&appid=${config.API_KEY}`;
         return this.httpClient.get<DayForecast>(uri);
     };
 }

@@ -10,9 +10,7 @@
         (ngModelChange)="inputValueSubject.next(input.value)"
         autocomplete="off"
     />
-    <button *ngIf="inputValueSubject.value" class="close" (click)="inputValueSubject.next('')">
-        &#x2715;
-    </button>
+    <button *ngIf="inputValueSubject.value" class="close" (click)="clearInput()">&#x2715;</button>
     <ng-container *ngIf="optionsDisplayed$ | async as optionsDisplayed">
         <div *ngIf="showOptions && optionsDisplayed.length" id="options">
             <div

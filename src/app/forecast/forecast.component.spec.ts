@@ -3,7 +3,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { expectText, findEl, findEls } from '../core/testing/element.spec-helper';
-import { mockZip } from '../core/testing/mock-data/mock-data';
+import { mockLocation } from '../core/testing/mock-data/mock-data';
 import { mockProvo5DayForecast } from '../core/testing/mock-data/mock-provo-5-day-forecast';
 import { mockProvoWeather } from '../core/testing/mock-data/mock-provo-weather';
 import { weatherServiceSpy } from '../core/testing/spies';
@@ -22,7 +22,8 @@ describe('ForecastComponent', () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        paramMap: of(convertToParamMap({ zip: mockZip })),
+                        paramMap: of(convertToParamMap({ zip: mockLocation.zipCode })),
+                        queryParamMap: of(convertToParamMap({ country: mockLocation.country })),
                     },
                 },
             ],
@@ -33,7 +34,7 @@ describe('ForecastComponent', () => {
     });
 
     it('displays the city name and zip code', () => {
-        expectText(fixture, 'header', ` ${mockProvoWeather.name} (${mockZip}) `);
+        expectText(fixture, 'header', ` ${mockProvoWeather.name} (${mockLocation.zipCode}) `);
     });
 
     it('displays the correct icon image for available weather types', () => {

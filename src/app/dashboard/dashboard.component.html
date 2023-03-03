@@ -11,23 +11,9 @@
                 placeholder="Zip code"
                 required
                 [(ngModel)]="zipCodeInput"
-                appDuplicateZipValidator
-                minlength="5"
-                maxlength="5"
                 data-testid="zipInput"
-                (ngModelChange)="isSubmitted = false"
+                (ngModelChange)="isSubmitted = zipHasNoWeather = false"
             />
-            <span
-                *ngIf="isSubmitted && zipCode.invalid && (zipCode.dirty || zipCode.touched)"
-                class="warning"
-            >
-                <span *ngIf="zipCode.errors?.['minlength']" data-testid="lengthError">
-                    Please enter a 5 digit zip code.
-                </span>
-                <span *ngIf="zipCode.errors?.['duplicateZip']"
-                    >Duplicate zip code. Please try another.</span
-                >
-            </span>
             <span *ngIf="zipHasNoWeather" class="warning" data-testid="badZipError"
                 >Could not find data for zipcode {{ zipCode.value }}. Please try another
                 zipcode.</span
@@ -38,8 +24,9 @@
                 [ariaLabel]="'Country'"
                 [id]="'country'"
                 [placeholder]="'Country name'"
-                [initValue]="'United States'"
+                [initValue]="countryValue"
                 [options]="countries"
+                (inputValue)="countryValue = $event"
                 >Country</app-typeahead
             >
         </div>
@@ -64,7 +51,7 @@
     <div class="dashboard-row" data-testid="weatherRow">
         <div>
             <h2 data-testid="name">
-                {{ weatherCondition.conditions.name }} ({{ weatherCondition.zipCode }})
+                {{ weatherCondition.conditions.name }} ({{ weatherCondition.location.zipCode }})
             </h2>
             <h3 data-testid="conditions">
                 Current conditions: {{ weatherCondition.conditions.weather[0].main }}
@@ -74,7 +61,10 @@
                 {{ weatherCondition.conditions.main.temp_max }} - Min
                 {{ weatherCondition.conditions.main.temp_min }}
             </h4>
-            <a [routerLink]="'forecast/' + weatherCondition.zipCode" data-testid="forecastLink"
+            <a
+                [routerLink]="['forecast', weatherCondition.location.zipCode]"
+                [queryParams]="{ country: weatherCondition.location.country }"
+                data-testid="forecastLink"
                 >View 5-day forecast</a
             >
         </div>
@@ -96,7 +86,7 @@
     <button
         class="close"
         data-testid="removeZipButton"
-        (click)="removeLocation(weatherCondition.zipCode)"
+        (click)="removeLocation(weatherCondition.location)"
     >
         &#215;
     </button>

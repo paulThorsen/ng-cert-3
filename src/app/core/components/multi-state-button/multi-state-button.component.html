@@ -1,4 +1,4 @@
-<button [type]="buttonType" (click)="buttonClick.emit()" data-testid="button">
+<button [type]="buttonType" (click)="buttonClick.emit()" data-testid="multiStageButton">
     <ng-container [ngSwitch]="stateObservable$ | async">
         <ng-content *ngSwitchCase="'loading'" select="[loading]"></ng-content>
         <ng-content *ngSwitchCase="'complete'" select="[complete]"></ng-content>

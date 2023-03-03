@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { BehaviorSubject, forkJoin, interval, of } from 'rxjs';
+import { BehaviorSubject, forkJoin, interval, of, timer } from 'rxjs';
 import { catchError, delay, map, startWith, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ButtonState } from '../core/components/multi-state-button/multi-state-button.component';
 import { countriesMap } from '../core/countries';
 import { WeatherConditionsFromZip } from '../core/models/weather-conditions';
 import { WeatherService } from '../core/services/weather.service';
-import { ZipCodeService } from '../core/services/zip-code.service';
+import { Location, LocationService } from '../core/services/location.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -18,36 +18,43 @@ export class DashboardComponent {
     public isSubmitted = false;
     public zipHasNoWeather = false;
     public zipCodeInput = '';
+    public countryValue = 'United States';
     public countries = Array.from(countriesMap.keys());
 
-    public zipCodes$ = this.zipCodes.getZipCodesSubjectAsObservable();
-    public weatherConditionsRefreshTimer$ = this.zipCodes$.pipe(
+    public locations$ = this.location.getLocationsSubjectAsObservable();
+    public weatherConditionsRefreshTimer$ = this.locations$.pipe(
         // Return -1 to indicate no zip codes
-        switchMap((zipCodes) => (zipCodes.length ? interval(30000).pipe(startWith(0)) : of(-1)))
+        switchMap((locations) => (locations.length ? interval(30000).pipe(startWith(0)) : of(-1)))
     );
     public zipCodeWeatherConditions$ = this.weatherConditionsRefreshTimer$.pipe(
-        withLatestFrom(this.zipCodes$),
-        switchMap(([timer, zipCodes]: [number, string[]]) =>
+        withLatestFrom(this.locations$),
+        switchMap(([timer, locations]: [number, Location[]]) =>
             // -1 indicates no zip codes
             timer >= 0
                 ? forkJoin(
-                      zipCodes.map((zip) =>
-                          this.weather.getWeatherConditionsByZip(zip).pipe(
-                              // Convert WeatherConditions to WeatherConditionsFromZip
-                              map((weather): WeatherConditionsFromZip => {
-                                  return {
-                                      zipCode: zip,
-                                      conditions: weather,
-                                  };
-                              })
-                          )
+                      locations.map((location) =>
+                          this.weather
+                              .getWeatherConditionsByZip(
+                                  location.zipCode,
+                                  // Pull from zip code object
+                                  countriesMap.get(location.country) as string
+                              )
+                              .pipe(
+                                  // Convert WeatherConditions to WeatherConditionsFromZip
+                                  map((weather): WeatherConditionsFromZip => {
+                                      return {
+                                          location: location,
+                                          conditions: weather,
+                                      };
+                                  })
+                              )
                       )
                   )
                 : of([])
         )
     );
 
-    constructor(private weather: WeatherService, private zipCodes: ZipCodeService) {}
+    constructor(private weather: WeatherService, private location: LocationService) {}
 
     public addLocation = (zipCode: string, isFormValid: boolean): void => {
         this.isSubmitted = true;
@@ -55,10 +62,10 @@ export class DashboardComponent {
         if (isFormValid) {
             this.submitStateSubject.next('loading');
             this.weather
-                .getWeatherConditionsByZip(zipCode)
+                .getWeatherConditionsByZip(zipCode, countriesMap.get(this.countryValue) as string)
                 .pipe(
                     tap(() => {
-                        this.zipCodes.addZipCode(zipCode);
+                        this.location.addLocation(zipCode, this.countryValue);
                         this.zipCodeInput = '';
                         this.isSubmitted = false;
                         this.submitStateSubject.next('complete');
@@ -75,7 +82,7 @@ export class DashboardComponent {
         }
     };
 
-    public removeLocation = (zipCode: string): void => {
-        this.zipCodes.removeZipCode(zipCode);
+    public removeLocation = (location: Location): void => {
+        this.location.removeLocation(location);
     };
 }
